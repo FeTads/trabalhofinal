@@ -1,4 +1,3 @@
-
 #include <windows.h>
 #include <stdio.h>
 #include <conio.h>
@@ -6,11 +5,9 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string.h>
-#include <ctype.h>
-#include<locale.h>
-#include<unistd.h>
 
-#define ENTER 13a
+
+#define ENTER 13
 
 
 typedef struct {
