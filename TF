@@ -12,6 +12,7 @@
 
 typedef struct {
 	
+	int existe;
 	char login[20];
 	char senha[20];
 	int admin;
@@ -19,7 +20,8 @@ typedef struct {
 	
 } User;
 
-User usuario, usuario1, usuario2;
+User usuario;
+User usuario1, usuario2;
 
 clock_t tempo = 0;
 
@@ -29,13 +31,15 @@ char morrer(char *morte, char *sim, char *nao);
 void rank(int opcao, char *nome, int t, int dif);
 void placar(int t, char *nome);
 int efetuar_login();
-int cadastrar(int opcao2, int *admin);
+int cadastrar(int opcao2);
 void excluir();
 void editar();
 void reset_ranking();
 void menu_admin();
 void menu_user();
+void mudar_login();
 void mudar_senha();
+void mudar_login_senha();
 void listar_cadastros();
 void jogar();
 
@@ -46,12 +50,12 @@ int main(void){
 	//ARRUMAR GERENCIAR PRA EXCLUIR STRUCTS DEPOIS ESQUEMA DE 2 ARQUIVOS;
  	//https://www.clubedohardware.com.br/forums/topic/1308636-excluir-struct-em-arquivo/
 
-	int opcao2, retorno, flag, t, dif, opcao, *admin = 0;
+	int opcao2, retorno, flag, t, dif, opcao;
 	int sair_menu;
 	char nome[20];
 	
 	//morte = (char*)malloc(1*sizeof(char));
-	admin = (int*)malloc(1*sizeof(int));
+	//admin = (int*)malloc(1*sizeof(int));
  		
 	system("cls");
  	do{
@@ -133,7 +137,7 @@ int main(void){
 			puts("__________________________________________________");
 			 	
 			 	
-		 	flag = cadastrar(opcao2, admin);
+		 	flag = cadastrar(opcao2);
 		 	system("cls");
 		 	if(flag == 1){
 		 		opcao2 = 100;
@@ -205,7 +209,7 @@ void rank(int opcao, char *nome, int t, int dif){
 	FILE *arquivo = fopen("ranking.bin","a+b");
 			
 	if(opcao != 3 && opcao != 2){
-		fprintf(arquivo,"Nome: %s\n", nome);
+		fprintf(arquivo,"Nome: %s", nome);
 		fprintf(arquivo,"Pontos: %d\n", t - 1);
 				
 					
@@ -272,6 +276,7 @@ void rank(int opcao, char *nome, int t, int dif){
 }  
 
 void placar(int t, char *nome){
+	
 	
 		system("cls");
 		system("mode con:cols=120 lines=30");
@@ -355,13 +360,13 @@ int efetuar_login(){
 	return 0;
 }
 
-int cadastrar(int opcao2, int *admin){
+int cadastrar(int opcao2){
 	
-	char c;
 	int flag = 0;
 	
-			
 		FILE *usuarios = fopen("user.bin","a+b");
+		
+		rewind(usuarios);
 		
 		do{
 			
@@ -373,7 +378,7 @@ int cadastrar(int opcao2, int *admin){
 				return 1;
 			}
 			
-			if(*admin == 1){
+			if(usuario2.admin == 1 && usuario.existe == 1){
 				fclose(usuarios);
 				printf("[ERRO] JA EXISTE UM ADMINISTRADOR AUTENTICADO");
 				system("\n\n\ntimeout /T 10");
@@ -385,60 +390,29 @@ int cadastrar(int opcao2, int *admin){
 			usuario.admin = usuario2.admin;
 			strcpy(usuario.login, usuario2.login);
 			strcpy(usuario.senha, usuario2.senha);
-		
-		
-		fwrite(&usuario, sizeof(User), 1, usuarios);
 					
 		if(usuario.admin == 1){
 			printf("______________________________________\n");
 			printf("\n\n\tADMINISTRADOR CADASTRADO\n");
 			printf("______________________________________\n");
-			fclose(usuarios);
 			system("\n\n\ntimeout /T 10");
-			printf(" OI> ");
-			*admin = 1;
-			printf(" %i ", *admin);
-			getch();
+			usuario.existe = 1;
+			fwrite(&usuario, sizeof(User), 1, usuarios);
+			fclose(usuarios);
 			menu_admin();	
 		}
 		else{
 			printf("______________________________________\n");
 			printf("\n\n\tUSUARIO CADASTRADO\n");
 			printf("______________________________________\n");
-			fclose(usuarios);
 			system("\n\n\ntimeout /T 10");
+			usuario.existe = 0;
+			fwrite(&usuario, sizeof(User), 1, usuarios);
+			fclose(usuarios);
 			menu_user();
 		}
-		fclose(usuarios);
-	
-	
 		
-	/*if(opcao2 == 4){	
-		FILE *usuarios = fopen("user.bin","rb");	
-		if(usuarios == NULL){
-	 		printf("\n\n\t\t\t**********************************\n");
-	 		printf("\t\t\tERRO!!! NAO EXISTE NENHUM CADASTRO\n");
-	 		printf("\t\t\t**********************************\n");
-	 		system("cls");
-		}
-		
-		else{
-			do{
-			fread(&usuario, sizeof(User), 1, usuarios);
-				if(usuario.admin == 1){
-					flag = 1;
-				}
-			}while( !feof(usuarios));
-			
-			if(flag == 1){
-				while( !feof(usuarios) ){ 
-					c = getc(usuarios);                          
-					printf("%c",c);                           
-				}
-			}
-		}
 		fclose(usuarios);
-	}*/
 	
 	system("\n\n\ntimeout /T 10");
 	
@@ -521,11 +495,40 @@ void excluir(){
 
 void editar(){
 	
+	system("cls");
+	
+	int op;
+	
+	do{
+		puts("======================== Editar ========================");
+		printf("||\t1 - Login e Senha\t\t\t\t\t||\n");
+		printf("||\t2 - Login\t\t\t\t\t||\n");
+		printf("||\t3 - Senha\t\t\t\t\t||\n");
+		printf("||\t4 - Sair\t\t\t\t\t||\n");
+		puts("======================= Editar ========================");
+		printf("> ");
+		scanf("%i", &op);
+		
+		if(op == 1){
+			mudar_login_senha();
+		}
+		
+		if(op == 2){
+			mudar_login();
+		}
+		
+		if(op == 3){
+			mudar_senha();
+		}
+		
+	
+	}while(op < 1 && op > 3);
+	
 }
 
 void reset_ranking(){
 	system("cls");
-	FILE *arquivo = fopen("ranking.bin","w+b");
+	FILE *arquivo = fopen("ranking.bin","wb");
 	
 	if(arquivo == NULL){
 		printf("\n\n");
@@ -535,7 +538,7 @@ void reset_ranking(){
 	else{
 		remove("ranking.bin");
 		printf("\n\n");
-		printf("\t\t[OK] Ranking removido com sucesso");
+		printf("\t\t[OK] Ranking resetado com sucesso");
 		system("\n\n\ntimeout /T 5");
 	}
 	
@@ -615,6 +618,263 @@ void menu_user(){
 
 }
 
+void mudar_login_senha(){
+	
+	int flag, flag1, flag2 = 2;
+	char login[50], novologin[50], novologin2[50], senha[50], novasenha[50], novasenha2[50];
+	
+	
+	system("cls");
+	
+	FILE *usuarios, *usuarios2;
+	
+	usuarios = fopen("user.bin","rb");
+	usuarios2 = fopen("user2.bin","wb");
+	
+	puts("================= MUDAR LOGIN E SENHA ==================");
+	printf("Digite o Login: ");
+	printf("\n> ");
+	fflush(stdin);
+	fgets(login, 50, stdin);
+	printf("Digite a senha: ");
+	printf("\n> ");
+	fgets(senha, 50, stdin);
+	
+	rewind(usuarios);
+	
+	while(fread(&usuario, sizeof(User), 1, usuarios) == 1){
+		if(strcmp(senha, usuario.senha) == 0 && strcmp(login, usuario.login) == 0){
+			flag = 1;
+			break;
+		}
+		else{
+			flag = -1;
+		}
+	}
+	if(flag == -1){
+		printf("\n\n\t[ERRO] Login ou Senha nao corresponde");
+		getch();
+	}
+	
+	if(flag == 1){
+		
+		printf("\nDigite novo Login: ");
+		printf("\n> ");
+		fflush(stdin);
+		fgets(novologin, 20, stdin);
+		
+		rewind(usuarios);
+		while(fread(&usuario, sizeof(User), 1, usuarios) == 1){
+			if(strcmp(novologin, usuario.login) == 0){
+				printf("[ERRO] JA EXISTE UM USUARIO COM ESSE LOGIN");
+				flag2 = 1;
+				getch();
+				break;
+			}
+		}
+		
+		if(flag2 != 1){
+			printf("\nConfirme o Login: ");
+			printf("\n> ");
+			fflush(stdin);
+			fgets(novologin2, 20,stdin);
+		
+			if(strcmp(novologin, novologin2) != 0){
+				printf("\n\n\t[ERRO] os Logins nao sao iguais");
+				getch();
+			}
+			
+			else{
+				printf("\nDigite nova senha: ");
+				printf("\n> ");
+				fflush(stdin);
+				fgets(novasenha, 20, stdin);
+				printf("\nConfirme a senha: ");
+				printf("\n> ");
+				fflush(stdin);
+				fgets(novasenha2, 20, stdin);
+				
+				if(strcmp(novasenha,novasenha2) != 0){
+					printf("\n\n\t[ERRO] as senhas nao sao iguais");
+					printf("\n\n\t[APERTE ENTER]");
+					getch();
+				}
+				else{
+					printf("\n\n\tLogin e Senha alterados com sucesso!!!");
+					flag1 = 10;
+					printf("\n\n\t[APERTE ENTER]");
+					getch();
+				}	
+			}
+		}
+	}
+	else{
+		printf("\n[ERRO] NAO existe usuario com esse Login ou essa senha");
+	}
+	puts("================= MUDAR LOGIN E SENHA ==================");
+	
+	rewind(usuarios);
+	
+	if(flag1 == 10){
+		while(fread(&usuario, sizeof(User), 1, usuarios) == 1){
+	       	if(strcmp(login, usuario.login) != 0){
+	       	    fwrite(&usuario, sizeof(User), 1, usuarios2);
+	       	}
+	       	else{
+	       		if(usuario.admin == 1){
+	       			usuario.admin = 1;
+	       			usuario.existe = 1;
+				}
+				else{
+					usuario.admin = 2;
+					usuario.existe = 2;
+				}
+	     		strcpy(usuario.login, novologin);
+	     		strcpy(usuario.senha, novasenha);
+	    
+	     		fwrite(&usuario, sizeof(User), 1, usuarios2);
+			}
+		}
+	}
+	else{
+		while(fread(&usuario, sizeof(User), 1, usuarios) == 1){	
+			fwrite(&usuario, sizeof(User), 1, usuarios2);
+		}
+	}
+
+	fclose(usuarios);
+   	fclose(usuarios2);
+   	
+    remove("user.bin");
+    rename("user2.bin","user.bin");
+	
+	
+	printf("\n\n\t[APERTE ENTER]");
+	
+	
+}
+
+void mudar_login(){
+	
+	
+	int flag, flag1, flag2 = 2;
+	char login[20], novologin[20], novologin2[20], senha[20];
+	
+	system("cls");
+	
+	FILE *usuarios, *usuarios2;
+	
+	usuarios = fopen("user.bin","rb");
+	usuarios2 = fopen("user2.bin","wb");
+	
+	puts("==================== MUDAR LOGIN =====================");
+	printf("Digite o Login: ");
+	printf("\n> ");
+	fflush(stdin);
+	fgets(login, 50, stdin);
+	printf("Digite a senha: ");
+	printf("\n> ");
+	fgets(senha, 50, stdin);
+	
+	rewind(usuarios);
+	
+	while(fread(&usuario, sizeof(User), 1, usuarios) == 1){
+		if(strcmp(senha, usuario.senha) == 0 && strcmp(login, usuario.login) == 0){
+			flag = 1;
+			break;
+		}
+		else{
+			flag = -1;
+		}
+	}
+	if(flag == -1){
+		printf("\n\n\t[ERRO] Login ou Senha nao corresponde");
+		getch();
+	}
+	
+	if(flag == 1){
+		
+		printf("\nDigite novo Login: ");
+		printf("\n> ");
+		fflush(stdin);
+		fgets(novologin, 20, stdin);
+		
+		rewind(usuarios);
+		while(fread(&usuario, sizeof(User), 1, usuarios) == 1){
+			if(strcmp(novologin,usuario.login) == 0){
+				printf("[ERRO] JA EXISTE UM USUARIO COM ESSE LOGIN");
+				flag2 = 1;
+				getch();
+				break;
+			}
+		}
+		
+		if(flag2 != 1){
+			printf("\nConfirme o Login: ");
+			printf("\n> ");
+			fflush(stdin);
+			fgets(novologin2, 20,stdin);
+		
+			if(strcmp(novologin, novologin2) != 0){
+				printf("\n\n\t[ERRO] os Logins nao sao iguais");
+				getch();
+			}
+			
+			else{
+				printf("\n\n\tLogin alterado com sucesso!!!");
+				flag1 = 10;
+				printf("\n\n\t[APERTE ENTER]");
+				getch();
+			}	
+		}
+	}
+	else{
+		printf("\n[ERRO] NAO existe usuario com esse Login ou essa senha");
+	}
+	puts("================= MUDAR LOGIN E SENHA ==================");
+	
+	rewind(usuarios);
+	
+	if(flag1 == 10){
+		while(fread(&usuario, sizeof(User), 1, usuarios) == 1){
+	       	if(strcmp(login, usuario.login) != 0){
+	       	    fwrite(&usuario, sizeof(User), 1, usuarios2);
+	       	}
+	       	else{
+	       		if(usuario.admin == 1){
+	       			usuario.admin = 1;
+	       			usuario.existe = 1;
+				}
+				else{
+					usuario.admin = 2;
+					usuario.existe = 2;
+				}
+	     		strcpy(usuario.login, novologin);
+	     		strcpy(usuario.senha, senha);
+	    
+	     		fwrite(&usuario, sizeof(User), 1, usuarios2);
+			}
+		}
+	}
+	else{
+		while(fread(&usuario, sizeof(User), 1, usuarios) == 1){	
+			fwrite(&usuario, sizeof(User), 1, usuarios2);
+		}
+	}
+
+	fclose(usuarios);
+   	fclose(usuarios2);
+   	
+    remove("user.bin");
+    rename("user2.bin","user.bin");
+	
+	
+	printf("\n\n\t[APERTE ENTER]");
+	
+	
+	
+}
+
 void mudar_senha(){
 	
 	int flag;
@@ -670,7 +930,15 @@ void mudar_senha(){
        	 	}
        	 	else{
        	 		
-       	 		usuario.admin = 2;
+       	 		if(usuario.admin == 1){
+       	 			usuario.admin = 1;
+					usuario.existe = 1;	
+				}
+				else{
+					usuario.admin = 2;
+					usuario.existe = 2;
+				}
+       	 		
        	 		strcpy(usuario.login, login);
        	 		strcpy(usuario.senha, novasenha);
     	
@@ -731,9 +999,6 @@ void jogar(){
  	int opcao = 0, opcao2 = 0;
  		
  	srand(time(NULL)); 
-		
-	FILE *arquivo;
-	FILE *usuarios;
 	
 	char nome[20];
 	int dif;
@@ -761,26 +1026,26 @@ void jogar(){
 					
 			tempo = clock();
 					
-			for(x = 0; x < 19; x++){   
+			for(x = 0; x < 30; x++){   
 				fazTudo(0,x);       //vai pra funcao e mostra a "parede"
 				fflush(stdin);
 				printf("%c",219);
 			}
 				    
-			for(x = 0; x < 26; x++){ 
+			for(x = 0; x < 37; x++){ 
 				fazTudo(x,0);
 				fflush(stdin);
 			    printf("%c",219);
 			}
 				    
-			for(x = 0; x < 19; x++){ 
-				fazTudo(26,x);
+			for(x = 0; x < 30; x++){ 
+				fazTudo(37,x);
 				fflush(stdin);
 				printf("%c",219);
 			}
 				    
-			for(x = 0; x < 27; x++){   
-				fazTudo(x,18);
+			for(x = 0; x < 37; x++){   
+				fazTudo(x,29);
 				fflush(stdin);
 				printf("%c",219);
 			}
@@ -815,8 +1080,8 @@ void jogar(){
 					    
 						for(x = t; x > 0; x--){
 							if(comidax == cx[x] && comiday == cy[x])  {   //e randomiza outra comida caso seja diferente do corpo
-					           	comidax=(rand()%25)+1;
-					        	comiday=(rand()%17)+1;
+					           	comidax=(rand()%35)+1;
+					        	comiday=(rand()%28)+1;
 					        }
 						}
 				    }
@@ -851,7 +1116,7 @@ void jogar(){
 					//}
 				            
 				            
-				    if(cy[0] == 0 || cy[0] == 18 || cx[0] == 0 || cx[0] == 26) tecla ='u';
+				    if(cy[0] == 0 || cy[0] == 29 || cx[0] == 0 || cx[0] == 37) tecla ='u';
 				}
 					
 				    if(tecla != 'u') tecla = getch();
@@ -888,7 +1153,7 @@ void jogar(){
 				       	if(d != 1)  d = 3;
 					}
 				        
-				    if(cy[0] == 0 || cy[0] == 18 || cx[0] == 0 || cx[0] == 26) tecla = 'u';  
+				    if(cy[0] == 0 || cy[0] == 29 || cx[0] == 0 || cx[0] == 37) tecla = 'u';  
 			}
 					
 			tempo = clock() - tempo;
@@ -899,17 +1164,13 @@ void jogar(){
 				system("\n\n\ntimeout /T 10");
 				system("cls");
 				placar(t, nome);
-				system("mode con:cols=120 lines=30");
+				//system("mode con:cols=120 lines=30");
 			   	system("cls");
 				    	
-			   	
+			   	rank(1, nome, t, dif);
 			   	
 				//*morte = 0;
 				x = 0, d = 2, cx[300] = 12, cy[300] = 11;			    	
-				
-				//printf(" > %s ", nome);
-				
-			   	rank(opcao, nome, t, dif);
 			   	opcao = 100;
 			   	t = 1;
 			   	dif = 0;
