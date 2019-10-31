@@ -29,7 +29,7 @@ char morrer(char *morte, char *sim, char *nao);
 void rank(int opcao, char *nome, int t, int dif);
 void placar(int t, char *nome);
 int efetuar_login();
-int cadastrar(int opcao2);
+int cadastrar(int opcao2, int *admin);
 void excluir();
 void editar();
 void reset_ranking();
@@ -46,11 +46,12 @@ int main(void){
 	//ARRUMAR GERENCIAR PRA EXCLUIR STRUCTS DEPOIS ESQUEMA DE 2 ARQUIVOS;
  	//https://www.clubedohardware.com.br/forums/topic/1308636-excluir-struct-em-arquivo/
 
-	int opcao2, retorno, flag, t, dif, opcao;
+	int opcao2, retorno, flag, t, dif, opcao, *admin = 0;
 	int sair_menu;
 	char nome[20];
 	
 	//morte = (char*)malloc(1*sizeof(char));
+	admin = (int*)malloc(1*sizeof(int));
  		
 	system("cls");
  	do{
@@ -85,7 +86,7 @@ int main(void){
 			
 	 		
 			else{
-	 			
+				fclose(usuarios);
 	 			
 			 	puts("_____________________________________________");
 				puts("------------------- LOGIN -------------------");
@@ -132,7 +133,7 @@ int main(void){
 			puts("__________________________________________________");
 			 	
 			 	
-		 	flag = cadastrar(opcao2);
+		 	flag = cadastrar(opcao2, admin);
 		 	system("cls");
 		 	if(flag == 1){
 		 		opcao2 = 100;
@@ -328,7 +329,6 @@ int efetuar_login(){
 		printf("______________________________________\n");
 		system("\n\n\ntimeout /T 10");
 		fclose(usuarios);
-		return 0;
 	}
 	
 	else if(flag == 1){
@@ -338,6 +338,7 @@ int efetuar_login(){
 		system("\n\n\ntimeout /T 10");
 		fclose(usuarios);
 		menu_admin();
+		
 	}
 	
 	else if(flag == 2){
@@ -351,18 +352,19 @@ int efetuar_login(){
 
 	fclose(usuarios);
 	
-	return 1;
+	return 0;
 }
 
-int cadastrar(int opcao2){
+int cadastrar(int opcao2, int *admin){
 	
 	char c;
 	int flag = 0;
+	
 			
 		FILE *usuarios = fopen("user.bin","a+b");
 		
 		do{
-			fread(&usuario, sizeof(User), 1, usuarios);
+			
 			
 			if(strcmp(usuario2.login, usuario.login) == 0){
 				fclose(usuarios);
@@ -371,7 +373,14 @@ int cadastrar(int opcao2){
 				return 1;
 			}
 			
-		}while( !feof(usuarios));
+			if(*admin == 1){
+				fclose(usuarios);
+				printf("[ERRO] JA EXISTE UM ADMINISTRADOR AUTENTICADO");
+				system("\n\n\ntimeout /T 10");
+				return 1;
+			}
+			
+		}while( fread(&usuario, sizeof(User), 1, usuarios) == 1);
 		
 			usuario.admin = usuario2.admin;
 			strcpy(usuario.login, usuario2.login);
@@ -386,6 +395,10 @@ int cadastrar(int opcao2){
 			printf("______________________________________\n");
 			fclose(usuarios);
 			system("\n\n\ntimeout /T 10");
+			printf(" OI> ");
+			*admin = 1;
+			printf(" %i ", *admin);
+			getch();
 			menu_admin();	
 		}
 		else{
@@ -679,7 +692,7 @@ void mudar_senha(){
 
 void listar_cadastros(){
 	system("cls");
-	FILE *usuarios = fopen("user2.bin","rb");
+	FILE *usuarios = fopen("user.bin","rb");
 	
 	rewind(usuarios);
 	
