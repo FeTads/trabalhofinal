@@ -138,7 +138,7 @@ int main(void){
 		 	flag = cadastrar(opcao2);
 		 	system("cls");
 		 	if(flag == 1){
-		 		opcao = 100;
+		 		opcao2 = 100;
 			}
 	 		
 		}
