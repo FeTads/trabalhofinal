@@ -945,6 +945,9 @@ void mudar_senha(){
        	 		fwrite(&usuario, sizeof(User), 1, usuarios2);
 			}
 		}
+		else{
+			fwrite(&usuario, sizeof(User), 1, usuarios2);
+		}
 	}
 
 	fclose(usuarios);
