@@ -224,7 +224,7 @@ void rank(int opcao, char *nome, int t, int dif){
 					}
 				}while(i > 60);
 									
-			fprintf(arquivo, " Tempo: %i Mins. e %i segundos\n", j, i);
+			fprintf(arquivo, "Tempo: %i Mins. e %i segundos\n", j, i);
 					    				    	
 		}
 		
@@ -907,7 +907,8 @@ void mudar_senha(){
 		printf("\nConfirme a senha: ");
 		printf("\n> ");
 		fgets(novasenha2, 50, stdin);
-		
+	
+	puts("\n===================== MUDAR SENHA ====================");
 		if(strcmp(novasenha, novasenha2) == 0){
 			printf("\n\n\tSenha alterada com sucesso!!!");
 			flag = 10;
@@ -917,9 +918,9 @@ void mudar_senha(){
 		}
 	}
 	else{
-		printf("\n[ERRO] NAO existe usuario com essa senha");
+		printf("\n\n\t[ERRO] NAO existe usuario com essa senha");
 	}
-	puts("\n===================== MUDAR SENHA ====================");
+	
 	
 	rewind(usuarios);
 	
@@ -958,6 +959,7 @@ void mudar_senha(){
 	
 	
 	printf("\n\n\t[APERTE ENTER]");
+	getch();
 		
 }
 
