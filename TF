@@ -29,7 +29,7 @@ void fazTudo(int x, int y);
 int dificuldade(int dif);
 char morrer(char *morte, char *sim, char *nao);
 void rank(int opcao, char *nome, int t, int dif);
-void placar(int t, char *nome);
+void placar(int t, char *nome, int dif);
 int efetuar_login();
 int cadastrar(int opcao2);
 void excluir();
@@ -46,17 +46,12 @@ void jogar();
 
 int main(void){ 
 
-
-	//ARRUMAR GERENCIAR PRA EXCLUIR STRUCTS DEPOIS ESQUEMA DE 2 ARQUIVOS;
- 	//https://www.clubedohardware.com.br/forums/topic/1308636-excluir-struct-em-arquivo/
-
 	int opcao2, retorno, flag, t, dif, opcao;
 	int sair_menu;
-	char nome[20];
+	char *nome;
 	
-	//morte = (char*)malloc(1*sizeof(char));
-	//admin = (int*)malloc(1*sizeof(int));
- 		
+	nome = (char*)malloc(20*sizeof(char)); 
+			
 	system("cls");
  	do{
  	
@@ -209,8 +204,17 @@ void rank(int opcao, char *nome, int t, int dif){
 	FILE *arquivo = fopen("ranking.bin","a+b");
 			
 	if(opcao != 3 && opcao != 2){
-		fprintf(arquivo,"Nome: %s", nome);
-		fprintf(arquivo,"Pontos: %d\n", t - 1);
+		fprintf(arquivo,"Nome ------------: %s", nome);
+		if(dif == 1){
+			fprintf(arquivo,"Pontos ----------: %d\n", (t - 1) * 2);
+		}
+		else if(dif == 2){
+			fprintf(arquivo,"Pontos ----------: %d\n", (t - 1) * 4);
+		}
+		else if(dif == 3){
+			fprintf(arquivo,"Pontos ----------: %d\n", (t - 1) * 7);
+		}
+		
 				
 					
 		if((float)(tempo/CLOCKS_PER_SEC) >= 60){
@@ -222,30 +226,30 @@ void rank(int opcao, char *nome, int t, int dif){
 					    j++;									//j = 1
 					    i = i - 60;								//i = 45
 					}
-				}while(i > 60);
+				}while(i >= 60);
 									
-			fprintf(arquivo, "Tempo: %i Mins. e %i segundos\n", j, i);
-					    				    	
+		fprintf(arquivo, "Tempo -----------: %i Mins. e %i segundos\n", j, i);
+				    				    	
 		}
 		
 		else{
-			fprintf(arquivo, "Tempo:  %.2f Seg.\n",((float)tempo/CLOCKS_PER_SEC));
+			fprintf(arquivo, "Tempo -----------: %.2f Seg.\n",((float)tempo/CLOCKS_PER_SEC));
 		}
 				
 				
 		if(dif == 1){
-			fprintf(arquivo, "Dificuldade: Facil\n");
+			fprintf(arquivo, "Dificuldade -----: Facil\n");
 		}
 		
 		else if(dif == 2){
-			fprintf(arquivo, "Dificuldade: Medio\n");
+			fprintf(arquivo, "Dificuldade -----: Medio\n");
 		}
 		
 		else if(dif == 3){
-			fprintf(arquivo, "Dificuldade: Dificil\n");
+			fprintf(arquivo, "Dificuldade -----: Dificil\n");
 		}
 				
-		fprintf(arquivo,"-------------------\n");
+		fprintf(arquivo,"---------------------------------------------------------\n");
 				
 			fclose(arquivo);
 	}
@@ -275,15 +279,23 @@ void rank(int opcao, char *nome, int t, int dif){
 			
 }  
 
-void placar(int t, char *nome){
+void placar(int t, char *nome, int dif){
 	
 	
 		system("cls");
 		system("mode con:cols=120 lines=30");
 		
 		printf("   PLACAR \n");
-		printf("  jogador: %s", nome);
-		printf("  pontuacao: %i\n", t-1);
+		printf("\njogador -----------: %s", nome);
+		if(dif == 1){
+			printf("Pontos : %d\n", (t - 1) * 2);
+		}
+		else if(dif == 2){
+			printf("Pontos -----------: %d\n", (t - 1) * 4);
+		}
+		else if(dif == 3){
+			printf("Pontos -----------: %d\n", (t - 1) * 7);
+		}
 	
 		if((float)(tempo/CLOCKS_PER_SEC) >= 60){
 			   	
@@ -294,13 +306,13 @@ void placar(int t, char *nome){
 					    j++;									//j = 1
 					    i = i - 60;								//i = 45
 					}
-				}while(i > 60);
+				}while(i >= 60);
 								
-			printf("  Tempo %i Mins. e %i segundos\n", j, i);
+			printf("Tempo ------------: %i Mins. e %i segundos\n", j, i);
 				    				    	
 		}
 		else{
-			printf("  Tempo:  %.2f Seg.\n",((float)tempo/CLOCKS_PER_SEC));
+			printf("Tempo ------------:  %.2f Seg.\n",((float)tempo/CLOCKS_PER_SEC));
 		}
 			
 		getch();
@@ -329,17 +341,17 @@ int efetuar_login(){
 	}
 	
 	if(flag == 0){
-		printf("______________________________________\n");
+		printf("_____________________________________________\n");
 		printf("\n\n\tUSUARIO INCORRETO\n");
-		printf("______________________________________\n");
+		printf("_____________________________________________\n");
 		system("\n\n\ntimeout /T 10");
 		fclose(usuarios);
 	}
 	
 	else if(flag == 1){
-		printf("______________________________________\n");
+		printf("_____________________________________________\n");
 		printf("\n\n\tADMINISTRADOR AUTENTICADO\n");
-		printf("______________________________________\n");
+		printf("_____________________________________________\n");
 		system("\n\n\ntimeout /T 10");
 		fclose(usuarios);
 		menu_admin();
@@ -347,9 +359,9 @@ int efetuar_login(){
 	}
 	
 	else if(flag == 2){
-		printf("______________________________________\n");
+		printf("_____________________________________________\n");
 		printf("\n\n\tUSUARIO AUTENTICADO\n");
-		printf("______________________________________\n");
+		printf("_____________________________________________\n");
 		system("\n\n\ntimeout /T 10");
 		fclose(usuarios);
 		menu_user();
@@ -380,21 +392,23 @@ int cadastrar(int opcao2){
 			
 			if(usuario2.admin == 1 && usuario.existe == 1){
 				fclose(usuarios);
-				printf("[ERRO] JA EXISTE UM ADMINISTRADOR AUTENTICADO");
+				printf("__________________________________________________\n");
+				printf("\n[ERRO] JA EXISTE UM ADMINISTRADOR AUTENTICADO\n");
+				printf("__________________________________________________\n");
 				system("\n\n\ntimeout /T 10");
 				return 1;
 			}
 			
 		}while( fread(&usuario, sizeof(User), 1, usuarios) == 1);
 		
-			usuario.admin = usuario2.admin;
-			strcpy(usuario.login, usuario2.login);
-			strcpy(usuario.senha, usuario2.senha);
+		usuario.admin = usuario2.admin;
+		strcpy(usuario.login, usuario2.login);
+		strcpy(usuario.senha, usuario2.senha);
 					
 		if(usuario.admin == 1){
-			printf("______________________________________\n");
+			printf("__________________________________________________\n");
 			printf("\n\n\tADMINISTRADOR CADASTRADO\n");
-			printf("______________________________________\n");
+			printf("__________________________________________________\n");
 			system("\n\n\ntimeout /T 10");
 			usuario.existe = 1;
 			fwrite(&usuario, sizeof(User), 1, usuarios);
@@ -402,9 +416,9 @@ int cadastrar(int opcao2){
 			menu_admin();	
 		}
 		else{
-			printf("______________________________________\n");
+			printf("__________________________________________________\n");
 			printf("\n\n\tUSUARIO CADASTRADO\n");
-			printf("______________________________________\n");
+			printf("__________________________________________________\n");
 			system("\n\n\ntimeout /T 10");
 			usuario.existe = 0;
 			fwrite(&usuario, sizeof(User), 1, usuarios);
@@ -423,6 +437,8 @@ void excluir(){
 	
 	system("cls");
 	
+	listar_cadastros();
+	
 	FILE *usuarios, *usuarios10;
 
     char AltLogin[50];
@@ -430,7 +446,7 @@ void excluir(){
     
     
     
-    printf("Digite O Login para excluir: ");
+    printf("\n\nDigite O Login para excluir: ");
     printf("> ");
     fflush(stdin);
     fgets(AltLogin,50,stdin);
@@ -489,8 +505,6 @@ void excluir(){
     
     
 	system("\n\n\ntimeout /T 5");
-	listar_cadastros();
-	
 }
 
 void editar(){
@@ -500,12 +514,13 @@ void editar(){
 	int op;
 	
 	do{
-		puts("======================== Editar ========================");
-		printf("||\t1 - Login e Senha\t\t\t\t\t||\n");
+		puts("========================= Editar =========================");
+		printf("||\t1 - Login e Senha\t\t\t\t||\n");
 		printf("||\t2 - Login\t\t\t\t\t||\n");
 		printf("||\t3 - Senha\t\t\t\t\t||\n");
-		printf("||\t4 - Sair\t\t\t\t\t||\n");
-		puts("======================= Editar ========================");
+		printf("||\t4 - exlcuir usuario\t\t\t\t||\n");
+		printf("||\t5 - Sair\t\t\t\t\t||\n");
+		puts("======================== Editar ==========================");
 		printf("> ");
 		scanf("%i", &op);
 		
@@ -521,8 +536,12 @@ void editar(){
 			mudar_senha();
 		}
 		
+		if(op == 4){
+			excluir();
+		}
+		
 	
-	}while(op < 1 && op > 3);
+	}while(op < 1 && op > 4);
 	
 }
 
@@ -550,18 +569,24 @@ void menu_admin(){
 	
 	int opcao;
 	int op_menu_admin, t, dif;
-	char nome[50];
+	char *nome;
+	
+	nome = (char*)malloc(20*sizeof(char)); 
+	
 	
 	do{
 		system("cls");
-		printf("||\t1 - Jogar  \t\t\t||\n");
-		printf("||\t2 - Ranking\t\t\t||\n");
-		printf("||\t3 - Editar \t\t\t||\n");
-		printf("||\t4 - Excluir  \t\t\t||\n");
-		printf("||\t5 - Resetar Ranking \t\t||\n");
-		printf("||\t6 - Listar Cadastros\t\t||\n");
-		printf("||\t7 - Sair     \t\t\t||\n");
+		puts("=================== MENU ADMININASTRO ====================");
+		printf("||\t1 - Jogar  \t\t\t\t\t||\n");
+		printf("||\t2 - Ranking\t\t\t\t\t||\n");
+		printf("||\t3 - Editar \t\t\t\t\t||\n");
+		printf("||\t4 - Resetar Ranking \t\t\t\t||\n");
+		printf("||\t5 - Listar Cadastros\t\t\t\t||\n");
+		printf("||\t6 - Sair     \t\t\t\t\t||\n");                       
+		puts("=================== MENU ADMININASTRO ====================");
+		printf("> ");
 		scanf("%i", &op_menu_admin);
+		
 		
 		if(op_menu_admin == 1){
 			jogar();
@@ -573,32 +598,37 @@ void menu_admin(){
 			editar();
 		}
 		else if(op_menu_admin == 4){
-			excluir();
-		}
-		else if(op_menu_admin == 5){
 			reset_ranking();
 		}
-		else if(op_menu_admin == 6){
+		else if(op_menu_admin == 5){
 			listar_cadastros();
 		}
 		
-	}while(op_menu_admin != 7);
+		else if(op_menu_admin < 1 || op_menu_admin > 6){
+			system("cls");
+			printf("\n\t[OPCAO NAO EXISTENTE]");
+			getch();
+		}
+		
+	}while(op_menu_admin != 6);
 	
 }
 
 void menu_user(){
 	
 	int opcao, t, dif;
-	char nome[20];
+	char *nome;
+	
+	nome = (char*)malloc(20*sizeof(char)); 
 	
 	do{
 		system("cls");
-		puts("========================= MENU ========================");
+		puts("========================= MENU ===========================");
 		printf("||\t1 - Jogar\t\t\t\t\t||\n");
 		printf("||\t2 - Ranking\t\t\t\t\t||\n");
 		printf("||\t3 - Mudar Senha\t\t\t\t\t||\n");
 		printf("||\t4 - Sair\t\t\t\t\t||\n");
-		puts("======================== MENU ========================");
+		puts("======================== MENU ============================");
 		printf("> ");
 		scanf("%i", &opcao);
 		
@@ -612,6 +642,11 @@ void menu_user(){
 			mudar_senha();
 		}
 		
+		else if(opcao < 1 || opcao > 4){
+			system("cls");
+			printf("\n\t[OPCAO NAO EXISTENTE]");
+			getch();
+		}
 		
 		
 	}while(opcao != 4);	
@@ -694,6 +729,8 @@ void mudar_login_senha(){
 				fflush(stdin);
 				fgets(novasenha2, 20, stdin);
 				
+				puts("================= MUDAR LOGIN E SENHA ==================");
+				
 				if(strcmp(novasenha,novasenha2) != 0){
 					printf("\n\n\t[ERRO] as senhas nao sao iguais");
 					printf("\n\n\t[APERTE ENTER]");
@@ -711,7 +748,7 @@ void mudar_login_senha(){
 	else{
 		printf("\n[ERRO] NAO existe usuario com esse Login ou essa senha");
 	}
-	puts("================= MUDAR LOGIN E SENHA ==================");
+
 	
 	rewind(usuarios);
 	
@@ -814,6 +851,8 @@ void mudar_login(){
 			printf("\n> ");
 			fflush(stdin);
 			fgets(novologin2, 20,stdin);
+			
+		puts("================= MUDAR LOGIN E SENHA ==================");
 		
 			if(strcmp(novologin, novologin2) != 0){
 				printf("\n\n\t[ERRO] os Logins nao sao iguais");
@@ -829,9 +868,9 @@ void mudar_login(){
 		}
 	}
 	else{
-		printf("\n[ERRO] NAO existe usuario com esse Login ou essa senha");
+		printf("\n\n\t[ERRO] NAO existe usuario com esse Login ou essa senha");
 	}
-	puts("================= MUDAR LOGIN E SENHA ==================");
+
 	
 	rewind(usuarios);
 	
@@ -857,7 +896,7 @@ void mudar_login(){
 		}
 	}
 	else{
-		while(fread(&usuario, sizeof(User), 1, usuarios) == 1){	
+		while(fread(&usuario, sizeof(User), 1, usuarios) == 1){
 			fwrite(&usuario, sizeof(User), 1, usuarios2);
 		}
 	}
@@ -907,20 +946,24 @@ void mudar_senha(){
 		printf("\nConfirme a senha: ");
 		printf("\n> ");
 		fgets(novasenha2, 50, stdin);
-	
-	puts("\n===================== MUDAR SENHA ====================");
+		
+		puts("\n===================== MUDAR SENHA ====================");
+		
 		if(strcmp(novasenha, novasenha2) == 0){
 			printf("\n\n\tSenha alterada com sucesso!!!");
 			flag = 10;
+			getch();
 		}
 		else{
 			printf("\n\n\t[ERRO] as senhas nao coincidem");
+			getch();
 		}
 	}
 	else{
 		printf("\n\n\t[ERRO] NAO existe usuario com essa senha");
+		getch();
 	}
-	
+
 	
 	rewind(usuarios);
 	
@@ -959,7 +1002,6 @@ void mudar_senha(){
 	
 	
 	printf("\n\n\t[APERTE ENTER]");
-	getch();
 		
 }
 
@@ -1005,13 +1047,13 @@ void jogar(){
  		
  	srand(time(NULL)); 
 	
-	char nome[20];
-	int dif;
-	//char *morte, sim[4] = "sim", nao[4] = "nao";
-	int x, d = 2, cx[300] = {12}, cy[300] = {11}, t = 1 ,comidax, comiday;
+	int dif, x;
+	int d = 2, cx[300] = {12}, cy[300] = {11}, t = 1 ,comidax, comiday;
 	char tecla = 'g'; 
-	char c;
-	int sair_menu = 0;
+	char *nome;
+	
+	nome = (char*)malloc(20*sizeof(char)); 
+
 	
 	system("cls");
 			printf("Digite seu nome: \n");
@@ -1056,8 +1098,8 @@ void jogar(){
 			}
 				    
 				    
-			comidax = 1 + (rand() % 25);  //posicao X da comida
-			comiday = 1 + (rand() % 17);  //posicao Y da comida
+			comidax = 1 + (rand() % 36);  //posicao X da comida
+			comiday = 1 + (rand() % 28);  //posicao Y da comida
 				     
 			while(tecla != 'u'){
 				    	
@@ -1080,15 +1122,16 @@ void jogar(){
 					            
 				    if(comidax == cx[0] && comiday == cy[0]){ //se comer, aumenta tamanho da cobrinha
 						t++;
-						comidax=(rand()%25)+1;
-					    comiday=(rand()%17)+1;
-					    
+						comidax=(rand()%36)+1;
+					    comiday=(rand()%28)+1;
+					    		
 						for(x = t; x > 0; x--){
-							if(comidax == cx[x] && comiday == cy[x])  {   //e randomiza outra comida caso seja diferente do corpo
-					           	comidax=(rand()%35)+1;
-					        	comiday=(rand()%28)+1;
-					        }
+							if(comidax == cx[x] && comiday == cy[x] && comiday == cx[x] && comidax == cy[x])  {  //e randomiza outra comida caso seja diferente do corpo
+						       	comidax=(rand()%36)+1;
+						       	comiday=(rand()%28)+1;
+						    }
 						}
+						
 				    }
 				            
 				            
@@ -1168,7 +1211,7 @@ void jogar(){
 				printf("\n\n\tGAME OVER!!!!");
 				system("\n\n\ntimeout /T 10");
 				system("cls");
-				placar(t, nome);
+				placar(t, nome, dif);
 				//system("mode con:cols=120 lines=30");
 			   	system("cls");
 				    	
