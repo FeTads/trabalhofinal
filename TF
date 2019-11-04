@@ -12,6 +12,8 @@ typedef struct {
 	char login[20];
 	char senha[20];
 	int admin;
+	
+	
 } User;
 
 User usuario;
@@ -143,6 +145,15 @@ int main(void){
 			exit(1);
 		}
 		
+		if(opcao2 < 1 || opcao2 > 4){
+			if(opcao2 != 100){
+				system("cls");
+				printf("\n\t[OPCAO NAO EXISTENTE]");
+				getch();
+				system("cls");
+			}
+		}
+		
 	}while(opcao2 < 1 || opcao2 > 4);
 	
 
@@ -198,7 +209,7 @@ void rank(int opcao, char *nome, int t, int dif){
 	FILE *arquivo = fopen("ranking.bin","a+b");
 			
 	if(opcao != 3 && opcao != 2){
-		fprintf(arquivo,"Nome ------------: %s", nome);
+		fprintf(arquivo,"\nNome ------------: %s", nome);
 		if(dif == 1){
 			fprintf(arquivo,"Pontos ----------: %d\n", (t - 1) * 2);
 		}
@@ -243,7 +254,7 @@ void rank(int opcao, char *nome, int t, int dif){
 			fprintf(arquivo, "Dificuldade -----: Dificil\n");
 		}
 				
-		fprintf(arquivo,"---------------------------------------------------------\n");
+		fprintf(arquivo,"---------------------------------------------------------------------\n");
 				
 			fclose(arquivo);
 	}
@@ -280,9 +291,9 @@ void placar(int t, char *nome, int dif){
 		system("mode con:cols=120 lines=30");
 		
 		printf("   PLACAR \n");
-		printf("\njogador -----------: %s", nome);
+		printf("\njogador ----------: %s", nome);
 		if(dif == 1){
-			printf("Pontos : %d\n", (t - 1) * 2);
+			printf("Pontos -----------: %d\n", (t - 1) * 2);
 		}
 		else if(dif == 2){
 			printf("Pontos -----------: %d\n", (t - 1) * 4);
@@ -306,7 +317,7 @@ void placar(int t, char *nome, int dif){
 				    				    	
 		}
 		else{
-			printf("Tempo ------------:  %.2f Seg.\n",((float)tempo/CLOCKS_PER_SEC));
+			printf("Tempo ------------: %.2f Seg.\n",((float)tempo/CLOCKS_PER_SEC));
 		}
 			
 		getch();
@@ -1025,8 +1036,6 @@ void listar_cadastros(){
         }	
 	}
 	
-		
-	
 	fclose(usuarios);
 	printf("\n\n\t[APERTE ENTER]");
 	getch();
@@ -1050,172 +1059,170 @@ void jogar(){
 
 	
 	system("cls");
-			printf("Digite seu nome: \n");
-			printf("> ");
-			fflush(stdin);
-			fgets(nome,20,stdin);
-					
-			dif = dificuldade(dif);
-			//morrer(morte, sim, nao);
-					
-			system("cls");
-				
-					
-			Sleep(1000);
+	
+	printf("digite seu nome: \n");
+	printf("> ");
+	fflush(stdin);
+	fgets(nome,20,stdin);
+			
+	dif = dificuldade(dif);
+	//morrer(morte, sim, nao);
+			
+	system("cls");
+		
+			
+	Sleep(1000);
 					
 				//system("mode con:cols=27 lines=19");
 					
-			tempo = clock();
-					
-			for(x = 0; x < 30; x++){   
-				fazTudo(0,x);       //vai pra funcao e mostra a "parede"
-				fflush(stdin);
-				printf("%c",219);
-			}
+	tempo = clock();
+				
+	for(x = 0; x < 30; x++){   
+		fazTudo(0,x);       //vai pra funcao e mostra a "parede"
+		fflush(stdin);
+		printf("%c",219);
+	}
 				    
-			for(x = 0; x < 37; x++){ 
-				fazTudo(x,0);
-				fflush(stdin);
-			    printf("%c",219);
-			}
+	for(x = 0; x < 37; x++){ 
+		fazTudo(x,0);
+		fflush(stdin);
+	    printf("%c",219);
+	}
 				    
-			for(x = 0; x < 30; x++){ 
-				fazTudo(37,x);
-				fflush(stdin);
-				printf("%c",219);
-			}
+	for(x = 0; x < 30; x++){ 
+		fazTudo(37,x);
+		fflush(stdin);
+		printf("%c",219);
+	}
 				    
-			for(x = 0; x < 37; x++){   
-				fazTudo(x,29);
-				fflush(stdin);
-				printf("%c",219);
-			}
+	for(x = 0; x < 37; x++){   
+		fazTudo(x,29);
+		fflush(stdin);
+		printf("%c",219);
+	}
 				    
 				    
-			comidax = 1 + (rand() % 36);  //posicao X da comida
-			comiday = 1 + (rand() % 28);  //posicao Y da comida
+	comidax = 1 + (rand() % 36);  //posicao X da comida
+	comiday = 1 + (rand() % 28);  //posicao Y da comida
 				     
-			while(tecla != 'u'){
-				    	
-				while(tecla != 'u' && !(tecla = kbhit())){ 
+	while(tecla != 'u'){	    	
+		while(tecla != 'u' && !(tecla = kbhit())){ 
 								  
-					for(x = t; x > 0; x--){    //for ora atualizar o tamanho da cobrinha
-						cx[x] = cx[x - 1];
-					    cy[x] = cy[x - 1];
-					}
+			for(x = t; x > 0; x--){    //for ora atualizar o tamanho da cobrinha
+				cx[x] = cx[x - 1];
+			    cy[x] = cy[x - 1];
+			}
 				            
-				    if(d == 0) cx[0]--;      //if's pra fazer a cobrinha andar
-				    if(d == 1) cy[0]--;
-				    if(d == 2) cx[0]++;
-				    if(d == 3) cy[0]++;
+		    if(d == 0) cx[0]--;      //if's pra fazer a cobrinha andar
+		    if(d == 1) cy[0]--;
+		    if(d == 2) cx[0]++;
+		    if(d == 3) cy[0]++;
 					           
 					           
-					fazTudo(cx[t], cy[t]);  //for pra atualizar a cobrinha
-					fflush(stdin);
-					printf(" ");
+			fazTudo(cx[t], cy[t]);  //for pra atualizar a cobrinha
+			fflush(stdin);
+			printf(" ");
 					            
-				    if(comidax == cx[0] && comiday == cy[0]){ //se comer, aumenta tamanho da cobrinha
-						t++;
-						comidax=(rand()%36)+1;
-					    comiday=(rand()%28)+1;
-					    		
-						for(x = t; x > 0; x--){
-							if(comidax == cx[x] && comiday == cy[x] && comiday == cx[x] && comidax == cy[x])  {  //e randomiza outra comida caso seja diferente do corpo
-						       	comidax=(rand()%36)+1;
-						       	comiday=(rand()%28)+1;
-						    }
+			if(comidax == cx[0] && comiday == cy[0]){ //se comer, aumenta tamanho da cobrinha
+				t++;
+				comidax=(rand()%36)+1;
+			    comiday=(rand()%28)+1;
+				for(x = t; x > 0; x--){
+					do{
+						if(comidax == cx[x] && comiday == cy[x])  {  //e randomiza outra comida caso seja diferente do corpo
+						   	comidax=(rand()%36)+1;
+						   	comiday=(rand()%28)+1;
 						}
-						
-				    }
+					}while(comidax == cx[x] && comiday == cy[x]);
+				}						
+			}
 				            
 				            
-				    fazTudo(cx[0], cy[0]);         //printa a cobrinha a cada segundo de percurso
-				    fflush(stdin);
-				    printf("%c",219);  //printa a forma da cobrinha
+			fazTudo(cx[0], cy[0]);         //printa a cobrinha a cada segundo de percurso
+			fflush(stdin);
+			printf("%c",219);  //printa a forma da cobrinha
 				            
-				    fazTudo(comidax,comiday);  //chama a funcao da nova posicao da comida
-				    fflush(stdin);
-				    printf("o");              //printa comida :)
+			fazTudo(comidax,comiday);  //chama a funcao da nova posicao da comida
+			fflush(stdin);
+			printf("o");              //printa comida :)
 		
-				 	if(dif == 1){
-				 		Sleep(260);
-					}
+			if(dif == 1){
+				Sleep(200);
+			}
 							 
-					else if(dif == 2){
-					 	Sleep(180);
-					}
-			
-				 	else if(dif == 3){
-				       	Sleep(140); 
-				    }
+			else if(dif == 2){
+			 	Sleep(130);
+			}
+			else if(dif == 3){
+			   	Sleep(100); 
+			}
 				            
 					//if(strcmp(morte,sim) == 0){
-					    for(x = 1; x < t; x++){ 	  
-							if(cx[0] == cx[x] && cy[0] == cy[x]) tecla = 'u'; // nao deixa a cobrinha se comer revisar futuramente pra um nivel facil
-						}
+			for(x = 1; x < t; x++){ 	  
+				if(cx[0] == cx[x] && cy[0] == cy[x]) tecla = 'u'; // nao deixa a cobrinha se comer revisar futuramente pra um nivel facil
+			}
 					//}
 					//else{
 					//}
 				            
 				            
-				    if(cy[0] == 0 || cy[0] == 29 || cx[0] == 0 || cx[0] == 37) tecla ='u';
-				}
+			if(cy[0] == 0 || cy[0] == 29 || cx[0] == 0 || cx[0] == 37) tecla ='u';
+		}
 					
-				    if(tecla != 'u') tecla = getch();
+		if(tecla != 'u') tecla = getch();
 				        
-				    if(tecla == 'K'){
-						if(d != 2 ) d = 0;   //setas do teclado
-				    }
+		if(tecla == 'K'){
+			if(d != 2 ) d = 0;   //setas do teclado
+		}
 				        
-				    if(tecla == 'H'){
-						if(d != 3) d = 1;
-					}
+		if(tecla == 'H'){
+			if(d != 3) d = 1;
+		}
 				        
-				    if(tecla == 'M'){
-				       	if(d != 0)  d = 2;
-					}
+		if(tecla == 'M'){
+		   	if(d != 0)  d = 2;
+		}
 				        
-				    if(tecla == 'P'){
-				       	if(d != 1)  d = 3;
-					}
+		if(tecla == 'P'){
+		   	if(d != 1)  d = 3;
+		}
 				        
-				    if(tecla == 'A' || tecla == 'a'){   //WASD pros gamers kkkk
-				    	if(d != 2 ) d = 0;
-					}
+		if(tecla == 'A' || tecla == 'a'){   //WASD pros gamers kkkk
+		   	if(d != 2 ) d = 0;
+		}
 				        
-				    if(tecla == 'W' || tecla == 'w'){
-				       	if(d != 3) d = 1;
-					}
+		if(tecla == 'W' || tecla == 'w'){
+		   	if(d != 3) d = 1;
+		}
 				        
-				    if(tecla == 'D' || tecla == 'd'){
-						if(d != 0) d = 2;
-					}
+		if(tecla == 'D' || tecla == 'd'){
+			if(d != 0) d = 2;
+		}
 						
-				    if(tecla == 'S' || tecla == 's'){
-				       	if(d != 1)  d = 3;
-					}
+		if(tecla == 'S' || tecla == 's'){
+		   	if(d != 1)  d = 3;
+		}
 				        
-				    if(cy[0] == 0 || cy[0] == 29 || cx[0] == 0 || cx[0] == 37) tecla = 'u';  
-			}
+		if(cy[0] == 0 || cy[0] == 29 || cx[0] == 0 || cx[0] == 37) tecla = 'u';  
+	}
 					
-			tempo = clock() - tempo;
+	tempo = clock() - tempo;
 					
-			if(tecla == 'u'){
-				system("cls");
-				printf("\n\n\tGAME OVER!!!!");
-				system("\n\n\ntimeout /T 10");
-				system("cls");
-				placar(t, nome, dif);
-				//system("mode con:cols=120 lines=30");
-			   	system("cls");
+	if(tecla == 'u'){
+		system("cls");
+		printf("\n\n\tGAME OVER!!!!");
+		system("\n\n\ntimeout /T 10");
+		system("cls");
+		placar(t, nome, dif);
+		//system("mode con:cols=120 lines=30");
+		system("cls");
 				    	
-			   	rank(1, nome, t, dif);
-			   	
+		rank(1, nome, t, dif);
+		   	
 				//*morte = 0;
-				x = 0, d = 2, cx[300] = 12, cy[300] = 11;			    	
-			   	opcao = 100;
-			   	t = 1;
-			   	dif = 0;
-			}
-	
+		x = 0, d = 2, cx[300] = 12, cy[300] = 11;			    	
+		opcao = 100;
+		t = 1;
+		dif = 0;
+	}
 }
