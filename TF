@@ -12,8 +12,6 @@ typedef struct {
 	char login[20];
 	char senha[20];
 	int admin;
-	
-	
 } User;
 
 User usuario;
@@ -38,7 +36,6 @@ void mudar_senha();
 void mudar_login_senha();
 void listar_cadastros();
 void jogar();
-
 
 int main(void){ 
 
