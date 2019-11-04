@@ -21,7 +21,7 @@ clock_t tempo = 0;
 
 void fazTudo(int x, int y);
 int dificuldade(int dif);
-char morrer(char *morte, char *sim, char *nao);
+//char morrer(char *morte, char *sim, char *nao);
 void rank(int opcao, char *nome, int t, int dif);
 void placar(int t, char *nome, int dif);
 int efetuar_login();
