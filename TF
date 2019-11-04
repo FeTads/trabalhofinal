@@ -12,6 +12,7 @@ typedef struct {
 	char login[20];
 	char senha[20];
 	int admin;
+	
 } User;
 
 User usuario;
@@ -25,7 +26,7 @@ int dificuldade(int dif);
 void rank(int opcao, char *nome, int t, int dif);
 void placar(int t, char *nome, int dif);
 int efetuar_login();
-int cadastrar(int opcao2);
+int cadastrar();
 void excluir();
 void editar();
 void reset_ranking();
@@ -36,6 +37,7 @@ void mudar_senha();
 void mudar_login_senha();
 void listar_cadastros();
 void jogar();
+
 
 int main(void){ 
 
@@ -125,7 +127,7 @@ int main(void){
 			puts("__________________________________________________");
 			 	
 			 	
-		 	flag = cadastrar(opcao2);
+		 	flag = cadastrar();
 		 	system("cls");
 		 	if(flag == 1){
 		 		opcao2 = 100;
@@ -374,17 +376,15 @@ int efetuar_login(){
 	return 0;
 }
 
-int cadastrar(int opcao2){
+int cadastrar(){
 	
 	int flag = 0;
 	
 		FILE *usuarios = fopen("user.bin","a+b");
 		
 		rewind(usuarios);
-		
+	
 		do{
-			
-			
 			if(strcmp(usuario2.login, usuario.login) == 0){
 				fclose(usuarios);
 				printf("[ERRO] JA EXISTE UM USUARIO COM ESSE LOGIN");
@@ -429,9 +429,6 @@ int cadastrar(int opcao2){
 		}
 		
 		fclose(usuarios);
-	
-	system("\n\n\ntimeout /T 10");
-	
 	return 1;
 }
 
@@ -1222,4 +1219,5 @@ void jogar(){
 		t = 1;
 		dif = 0;
 	}
+	
 }
